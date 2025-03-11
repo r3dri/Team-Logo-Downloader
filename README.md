@@ -1,5 +1,6 @@
 # VSCL Team Logo Downloader
-<img width="769" alt="image" src="https://github.com/user-attachments/assets/65753532-f807-46fc-b33d-9ad006340226" />
+<img width="822" alt="image" src="https://github.com/user-attachments/assets/13372630-9710-4830-bb29-95c115f23ccd" />
+
 
 Этот Python скрипт автоматизирует процесс скачивания логотипов команд со страницы турнира VSCL.RU. Он имеет графический пользовательский интерфейс (GUI), созданный с помощью Tkinter, что упрощает указание целевого URL и желаемой выходной директории.
 
