@@ -20,13 +20,14 @@ class TeamLogoDownloaderGUI:
         self.url_entry.grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
         self.url_entry.insert(0, "https://www.vscl.ru/tournaments/868/participants")
 
-        self.browse_button = ttk.Button(master, text="Выберите папку сохранения:", command=self.browse_folder)
-        self.browse_button.grid(row=1, column=0, padx=5, pady=5, sticky=tk.W)
+        self.output_label = ttk.Label(master, text="Выберите папку сохранения:")
+        self.output_label.grid(row=1, column=0, padx=5, pady=5, sticky=tk.W)
 
         self.output_path = tk.StringVar()
         self.output_path.set("teams_img")
-        self.output_entry = ttk.Entry(master, textvariable=self.output_path, width=50)
-        self.output_entry.grid(row=1, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
+
+        self.browse_button = ttk.Button(master, textvariable=self.output_path, command=self.browse_folder, width=50)
+        self.browse_button.grid(row=1, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
 
         self.filename_label = ttk.Label(master, text="Выберите тип названия:")
         self.filename_label.grid(row=2, column=0, padx=5, pady=5, sticky=tk.W)
