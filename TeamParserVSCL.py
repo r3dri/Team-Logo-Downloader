@@ -34,7 +34,7 @@ class TeamLogoDownloaderGUI:
         self.filename_combo = ttk.Combobox(master, textvariable=self.filename_type, values=["Полное", "Сокращенное"], state="readonly")
         self.filename_combo.grid(row=2, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
         
-        self.download_button = ttk.Button(master, text="Download Logos", command=self.start_download)
+        self.download_button = ttk.Button(master, text="Выгрузить логотипы", command=self.start_download)
         self.download_button.grid(row=3, column=0, columnspan=2, pady=10)
 
         self.status_label = ttk.Label(master, text="")
