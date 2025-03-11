@@ -20,7 +20,7 @@ class TeamLogoDownloaderGUI:
         self.url_entry.grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
         self.url_entry.insert(0, "https://www.vscl.ru/tournaments/868/participants")
 
-        self.browse_button = ttk.Button(master, text="Browse Output Folder", command=self.browse_folder)
+        self.browse_button = ttk.Button(master, text="Выберите папку сохранения:", command=self.browse_folder)
         self.browse_button.grid(row=1, column=0, padx=5, pady=5, sticky=tk.W)
 
         self.output_path = tk.StringVar()
@@ -28,12 +28,17 @@ class TeamLogoDownloaderGUI:
         self.output_entry = ttk.Entry(master, textvariable=self.output_path, width=50)
         self.output_entry.grid(row=1, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
 
-
+        self.filename_label = ttk.Label(master, text="Выберите тип названия:")
+        self.filename_label.grid(row=2, column=0, padx=5, pady=5, sticky=tk.W)
+        self.filename_type = tk.StringVar(value="Полное")
+        self.filename_combo = ttk.Combobox(master, textvariable=self.filename_type, values=["Полное", "Сокращенное"], state="readonly")
+        self.filename_combo.grid(row=2, column=1, padx=5, pady=5, sticky=(tk.W, tk.E))
+        
         self.download_button = ttk.Button(master, text="Download Logos", command=self.start_download)
-        self.download_button.grid(row=2, column=0, columnspan=2, pady=10)
+        self.download_button.grid(row=3, column=0, columnspan=2, pady=10)
 
         self.status_label = ttk.Label(master, text="")
-        self.status_label.grid(row=3, column=0, columnspan=2, pady=5)
+        self.status_label.grid(row=4, column=0, columnspan=2, pady=5)
 
         master.columnconfigure(1, weight=1)
 
@@ -45,16 +50,17 @@ class TeamLogoDownloaderGUI:
     def start_download(self):
         url = self.url_entry.get()
         output_dir = self.output_path.get()
-        Thread(target=self.download_team_logos_threaded, args=(url, output_dir)).start()
+        filename_type = self.filename_type.get()
+        Thread(target=self.download_team_logos_threaded, args=(url, output_dir, filename_type)).start()
 
-    def download_team_logos_threaded(self, url, output_dir):
+    def download_team_logos_threaded(self, url, output_dir,filename_type):
         try:
-            self.download_team_logos(url, output_dir)
+            self.download_team_logos(url, output_dir, filename_type)
         except Exception as e:
             self.status_label.config(text=f"Error: {str(e)}")
 
 
-    def download_team_logos(self, url, output_dir="teams_img"):
+    def download_team_logos(self, url, output_dir="teams_img",filename_type="Полное"):
         self.status_label.config(text="Starting download...")
 
         if not os.path.exists(output_dir):
@@ -79,7 +85,14 @@ class TeamLogoDownloaderGUI:
                         team_response.raise_for_status()
                         team_soup = BeautifulSoup(team_response.content, "html.parser")
 
-                        team_name_span = team_soup.find("span", class_="vcard-nickname d-block")
+                        if filename_type == "full":
+                            team_name_span = team_soup.find("span", class_="vcard-nickname d-block")
+                        elif filename_type == "short":
+                            team_name_span = team_soup.find("span", class_="vcard-fullname d-block")
+                        else:
+                            self.status_label.config(text="Error: Invalid filename type selected.")
+                            continue
+
                         if team_name_span:
                             team_name = team_name_span.text.strip()
                         else:
@@ -121,7 +134,6 @@ class TeamLogoDownloaderGUI:
             self.status_label.config(text=f"Error requesting participants page {url}: {e}")
 
         self.status_label.config(text="Download complete!")
-
 
 root = tk.Tk()
 gui = TeamLogoDownloaderGUI(root)
