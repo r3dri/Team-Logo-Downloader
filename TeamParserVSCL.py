@@ -86,9 +86,9 @@ class TeamLogoDownloaderGUI:
                         team_response.raise_for_status()
                         team_soup = BeautifulSoup(team_response.content, "html.parser")
 
-                        if filename_type == "full":
+                        if filename_type == "Полное":
                             team_name_span = team_soup.find("span", class_="vcard-nickname d-block")
-                        elif filename_type == "short":
+                        elif filename_type == "Сокращенное":
                             team_name_span = team_soup.find("span", class_="vcard-fullname d-block")
                         else:
                             self.status_label.config(text="Error: Invalid filename type selected.")
