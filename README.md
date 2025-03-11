@@ -38,7 +38,7 @@
 3.  **Запустите скрипт:**
 
     ```bash
-    python team_logo_downloader.py
+    python TeamParserVSCL.py
     ```
 
 4.  **Введите URL:** Вставьте URL целевой веб-страницы в поле "URL".
