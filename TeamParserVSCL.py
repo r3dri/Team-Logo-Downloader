@@ -116,8 +116,7 @@ class TeamLogoDownloaderGUI:
                             logo_response = requests.get(logo_url)
                             logo_response.raise_for_status()
                             image = Image.open(BytesIO(logo_response.content))
-                            safe_team_name = "".join(c if c.isalnum() or c in "._-" else " " for c in team_name)
-                            filename = os.path.join(output_dir, f"{safe_team_name}.png")
+                            filename = os.path.join(output_dir, f"{team_name}.png")
 
                             image.save(filename, "PNG")
                             self.status_label.config(text=f"Downloaded {i+1}/{total_teams}: {team_name}")
