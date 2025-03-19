@@ -7,6 +7,7 @@ from io import BytesIO
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog, simpledialog, X, BOTH, END
 from threading import Thread
+import subprocess
 
 class TeamLogoDownloaderGUI:
     def __init__(self, master):
@@ -42,6 +43,10 @@ class TeamLogoDownloaderGUI:
         self.status_label.grid(row=4, column=0, columnspan=2, pady=5)
 
         master.columnconfigure(1, weight=1)
+        
+        self.open_folder_button = ttk.Button(master, text="Открыть папку с логотипами", command=self.open_folder, state=tk.DISABLED)
+        self.open_folder_button.grid(row=5, column=0, columnspan=2, pady=10)
+        self.open_folder_button.grid_remove()
 
     def browse_folder(self):
         folder_selected = filedialog.askdirectory()
@@ -133,8 +138,21 @@ class TeamLogoDownloaderGUI:
         except requests.exceptions.RequestException as e:
             self.status_label.config(text=f"Error requesting participants page {url}: {e}")
 
-        self.status_label.config(text="Download complete!")
+        self.status_label.config(text="Логотипы скачаны!")
+        self.open_folder_button.config(state=tk.NORMAL)
+        self.open_folder_button.grid()
 
+    def open_folder(self):
+            output_dir = self.output_path.get()
+            if os.path.exists(output_dir):
+                if os.name == 'nt':  # for win
+                    os.startfile(output_dir)
+                elif os.name == 'posix':  # for unix
+                    subprocess.Popen(['open', output_dir])
+                else:
+                    messagebox.showinfo("Info", "Неподдерживаемая операционная система")
+            else:
+                messagebox.showinfo("Info", "Папка не существует")
 root = tk.Tk()
 gui = TeamLogoDownloaderGUI(root)
 root.mainloop()
